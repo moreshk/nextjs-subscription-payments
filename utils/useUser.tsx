@@ -66,13 +66,23 @@ export const MyUserContextProvider = (props: Props) => {
     }
   }, [user, isLoadingUser]);
 
+  const refreshUserDetails = async () => {
+    const { data, error } = await getUserDetails();
+    if (!error) {
+      setUserDetails(data);
+    }
+  };
+
   const value = {
     accessToken,
     user,
     userDetails,
     isLoading: isLoadingUser || isLoadingData,
-    subscription
+    subscription,
+    refreshUserDetails
   };
+
+
 
   return <UserContext.Provider value={value} {...props} />;
 };
@@ -84,3 +94,4 @@ export const useUser = () => {
   }
   return context;
 };
+
