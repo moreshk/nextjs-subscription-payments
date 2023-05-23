@@ -149,9 +149,13 @@ export default function Account({ user }: { user: User }) {
                 />
                 <button
                   onClick={async () => {
-                    await updateUserName(user.id, fullName);
-                    await refreshUserDetails();
-                    setIsEditing(false);
+                    if (user && user.id) {
+                      await updateUserName(user.id, fullName);
+                      await refreshUserDetails();
+                      setIsEditing(false);
+                    } else {
+                      console.error('User ID not found');
+                    }
                   }}
                   className="..."
                 >
