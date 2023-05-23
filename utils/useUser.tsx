@@ -13,6 +13,7 @@ type UserContextType = {
   userDetails: UserDetails | null;
   isLoading: boolean;
   subscription: Subscription | null;
+  refreshUserDetails: () => void;  // add this line
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -67,11 +68,17 @@ export const MyUserContextProvider = (props: Props) => {
   }, [user, isLoadingUser]);
 
   const refreshUserDetails = async () => {
-    const { data, error } = await getUserDetails();
-    if (!error) {
+    try {
+      const { data, error } = await getUserDetails();
+      if (error) {
+        throw error;
+      }
       setUserDetails(data);
+    } catch (error) {
+      console.error("Failed to refresh user details:", error);
     }
   };
+  
 
   const value = {
     accessToken,
