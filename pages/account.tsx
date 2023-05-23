@@ -10,6 +10,7 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
+import { updateUserName } from '@/utils/supabase-client';
 
 interface Props {
   title: string;
