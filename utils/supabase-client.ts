@@ -26,11 +26,25 @@ export const getActiveProductsWithPrices = async (): Promise<
   return (data as any) || [];
 };
 
-export const updateUserName = async (user: User, name: string) => {
-  await supabase
-    .from('users')
-    .update({
-      full_name: name
-    })
-    .eq('id', user.id);
+// export const updateUserName = async (user: User, name: string) => {
+//   await supabase
+//     .from('users')
+//     .update({
+//       full_name: name
+//     })
+//     .eq('id', user.id);
+// };
+
+export const updateUserName = async (userId: string, fullName: string) => {
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({ full_name: fullName })
+      .eq('id', userId);
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    console.error("Failed to update user name:", error);
+  }
 };
