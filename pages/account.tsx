@@ -149,12 +149,12 @@ export default function Account({ user }: { user: User }) {
                 />
                 <button
                   onClick={async () => {
-                    if (user && user.id) {
+                    if (user && user.id && fullName) {
                       await updateUserName(user.id, fullName);
                       await refreshUserDetails();
                       setIsEditing(false);
                     } else {
-                      console.error('User ID not found');
+                      console.error('User ID not found or name not entered');
                     }
                   }}
                   className="..."
