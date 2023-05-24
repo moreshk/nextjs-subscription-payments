@@ -52,7 +52,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { data: userResponses, error } = await supabase
     .from('user_response')
     .select('*')
-    .eq('user_id', session.user.id);
+  // .eq('user_id', session.user.id);
 
   if (error) {
     console.log("Error fetching user responses: ", error);
@@ -69,7 +69,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 export default function Account({ user, userResponses }: { user: User, userResponses: UserResponse[] }) {
-// export default function Account({ user }: { user: User }) {
+  // export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
 
@@ -168,6 +168,19 @@ export default function Account({ user, userResponses }: { user: User, userRespo
             {user ? user.email : undefined}
           </p>
         </Card>
+
+        <Card
+          title="All User Responses"
+          description="These are interactions with the bot from all users."
+        >
+          {userResponses.map((response, index) => (
+            <div key={index}>
+              <h2>Question: {response.user_question}</h2>
+              <p>Answer: {response.bot_answer}</p>
+            </div>
+          ))}
+        </Card>
+
       </div>
     </section>
   );
