@@ -10,7 +10,6 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
-import { updateUserName } from '@/utils/supabase-client';
 
 interface Props {
   title: string;
@@ -58,7 +57,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
-  const { isLoading, subscription, userDetails, refreshUserDetails } = useUser();
+  const { isLoading, subscription, userDetails } = useUser();
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
@@ -80,9 +79,6 @@ export default function Account({ user }: { user: User }) {
       currency: subscription?.prices?.currency,
       minimumFractionDigits: 0
     }).format((subscription?.prices?.unit_amount || 0) / 100);
-
-  const [fullName, setFullName] = useState(userDetails ? userDetails.full_name : "");
-  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <section className="bg-black mb-32">
@@ -132,53 +128,24 @@ export default function Account({ user }: { user: User }) {
             )}
           </div>
         </Card>
-
-       <Card
+        <Card
           title="Your Name"
           description="Please enter your full name, or a display name you are comfortable with."
           footer={<p>Please use 64 characters at maximum.</p>}
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
-            {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={e => setFullName(e.target.value)}
-                  className="..."
-                />
-                <button
-                  onClick={async () => {
-                    if (user && user.id && fullName) {
-                      await updateUserName(user.id, fullName);
-                      await refreshUserDetails();
-                      setIsEditing(false);
-                    } else {
-                      console.error('User ID not found or name not entered');
-                    }
-                  }}
-                  className="..."
-                >
-                  Save
-                </button>
-              </>
+            {userDetails ? (
+              `${
+                userDetails.full_name ??
+                `${userDetails.first_name} ${userDetails.last_name}`
+              }`
             ) : (
-              <>
-                {userDetails ? (
-                  `${userDetails.full_name}`
-                ) : (
-                  <div className="h-8 mb-6">
-                    <LoadingDots />
-                  </div>
-                )}
-                <button onClick={() => setIsEditing(true)} className="...">Edit</button>
-              </>
+              <div className="h-8 mb-6">
+                <LoadingDots />
+              </div>
             )}
           </div>
         </Card>
-
-
-
         <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
