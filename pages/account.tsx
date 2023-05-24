@@ -53,7 +53,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     .from('user_response')
     .select('*')
   // .eq('user_id', session.user.id);
-
+  console.log('userResponses:', userResponses);
   if (error) {
     console.log("Error fetching user responses: ", error);
   }
