@@ -10,7 +10,6 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
-import { UserResponse } from '@/types'
 
 interface Props {
   title: string;
@@ -48,28 +47,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       }
     };
 
-  // Fetch user_response data
-  const { data: userResponses, error } = await supabase
-    .from('user_response')
-    .select('*')
-  // .eq('user_id', session.user.id);
-  console.log('userResponses:', userResponses);
-  if (error) {
-    console.log("Error fetching user responses: ", error);
-  }
-
-
   return {
     props: {
       initialSession: session,
-      user: session.user,
-      userResponses: userResponses || []
+      user: session.user
     }
   };
 };
 
-export default function Account({ user, userResponses }: { user: User, userResponses: UserResponse[] }) {
-  // export default function Account({ user }: { user: User }) {
+export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
 
@@ -149,8 +135,9 @@ export default function Account({ user, userResponses }: { user: User, userRespo
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              `${userDetails.full_name ??
-              `${userDetails.first_name} ${userDetails.last_name}`
+              `${
+                userDetails.full_name ??
+                `${userDetails.first_name} ${userDetails.last_name}`
               }`
             ) : (
               <div className="h-8 mb-6">
@@ -168,19 +155,6 @@ export default function Account({ user, userResponses }: { user: User, userRespo
             {user ? user.email : undefined}
           </p>
         </Card>
-
-        <Card
-          title="All User Responses"
-          description="These are interactions with the bot from all users."
-        >
-          {userResponses.map((response, index) => (
-            <div key={index}>
-              <h2>Question: {response.user_question}</h2>
-              <p>Answer: {response.bot_answer}</p>
-            </div>
-          ))}
-        </Card>
-
       </div>
     </section>
   );
