@@ -68,3 +68,11 @@ export interface Subscription {
   trial_end?: string;
   prices?: Price;
 }
+
+export interface UserResponse {
+  id: string;
+  user_question: string;
+  bot_answer: string;
+  created_at: string;
+}
+

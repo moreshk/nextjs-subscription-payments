@@ -10,6 +10,7 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
+import { UserResponse } from '@/types'
 
 interface Props {
   title: string;
@@ -47,15 +48,28 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       }
     };
 
+  // Fetch user_response data
+  const { data: userResponses, error } = await supabase
+    .from('user_response')
+    .select('*')
+    .eq('user_id', session.user.id);
+
+  if (error) {
+    console.log("Error fetching user responses: ", error);
+  }
+
+
   return {
     props: {
       initialSession: session,
-      user: session.user
+      user: session.user,
+      userResponses: userResponses || []
     }
   };
 };
 
-export default function Account({ user }: { user: User }) {
+export default function Account({ user, userResponses }: { user: User, userResponses: UserResponse[] }) {
+// export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
 
@@ -135,9 +149,8 @@ export default function Account({ user }: { user: User }) {
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              `${
-                userDetails.full_name ??
-                `${userDetails.first_name} ${userDetails.last_name}`
+              `${userDetails.full_name ??
+              `${userDetails.first_name} ${userDetails.last_name}`
               }`
             ) : (
               <div className="h-8 mb-6">
