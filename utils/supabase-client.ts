@@ -34,3 +34,13 @@ export const updateUserName = async (user: User, name: string) => {
     })
     .eq('id', user.id);
 };
+
+export async function fetchUserResponses(userId: string) {
+  const { data, error } = await supabase
+    .from('user_response')
+    .select('*')
+    // .eq('user_id', userId)
+
+  if (error) throw error
+  return data
+}
