@@ -4,6 +4,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import Logo from '@/components/icons/Logo';
 import { useUser } from '@/utils/useUser';
+import { Dropdown } from '@supabase/ui'
 
 import s from './Navbar.module.css';
 
@@ -27,9 +28,24 @@ const Navbar = () => {
               <Link href="/" className={s.link}>
                 Pricing
               </Link>
-              <Link href="/account" className={s.link}>
+              <Dropdown
+                overlay={[
+                  <>
+                    <Link href="/account" className={s.link}>
+                    <Dropdown.Item>
+                      Account
+                    </Dropdown.Item>
+                    </Link>
+                    <Link href="/chatbot" className={s.link}>
+                    <Dropdown.Item>
+                      Chatbot
+                    </Dropdown.Item>
+                  </Link>
+                  </>
+                ]}
+              >
                 Account
-              </Link>
+              </Dropdown>
             </nav>
           </div>
 

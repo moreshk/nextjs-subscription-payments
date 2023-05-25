@@ -35,3 +35,29 @@ export const updateUserName = async (user: User, name: string) => {
     .eq('id', user.id);
 };
 
+export const createChatbot = async (user: User, prompt: string) => {
+  const { error: supabaseError } = await supabase
+    .from('chatbots')
+    .insert({ user_id: user.id, prompt: prompt });
+  if (supabaseError) throw supabaseError;
+  console.log('New chatbot created and inserted');
+  return user.id;
+};
+
+export const getChatbotsByUserId = async (user: User) => {
+  try {
+    const { data, error } = await supabase
+      .from('chatbots')
+      .select()
+      .eq('user_id', user.id);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.log('Error retrieving chatbots:', error);
+    throw error;
+  }
+};
