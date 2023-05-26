@@ -302,9 +302,9 @@ export default function Chatbot({ user }: { user: User }) {
       </div>
       {/* <MaterialReactTable columns={columns} data={data} /> */}
 
-      <div className="font-bold text-3xl text-center mb-10">My Chatbots</div>
+      <div className="font-bold text-3xl text-center mb-8">My Chatbots</div>
       <div className="dark:bg-gray-900">
-        <div className="px-12 py-24">
+        <div className="px-12 py-8">
           <table className="w-full table-auto border-collapse">
             <thead>
               <tr>
