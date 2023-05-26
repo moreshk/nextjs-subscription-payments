@@ -200,6 +200,7 @@ export default function Chatbot({ user }: { user: User }) {
   );
 
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     fetchChatbots();
@@ -215,8 +216,12 @@ export default function Chatbot({ user }: { user: User }) {
     }
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
+    setCopySuccess(true);
+    setTimeout(() => {
+      setCopySuccess(false);
+    }, 2000);
   };
 
   return (
@@ -297,7 +302,7 @@ export default function Chatbot({ user }: { user: User }) {
       </div>
       {/* <MaterialReactTable columns={columns} data={data} /> */}
 
-      <div className="font-bold text-3xl text-center mb-8">My Chatbots</div>
+      {/* <div className="font-bold text-3xl text-center mb-8">My Chatbots</div>
       <div className="dark:bg-gray-900">
         <div className="px-20 py-6">
           <table className="w-full table-auto border-collapse">
@@ -350,7 +355,69 @@ export default function Chatbot({ user }: { user: User }) {
             </tbody>
           </table>
         </div>
+      </div> */}
+
+<div className="font-bold text-3xl text-center mb-10">My Chatbots</div>
+    <div className="dark:bg-gray-900">
+      <div className="px-12 py-24">
+        <table className="w-full table-auto border-collapse">
+          <thead>
+            <tr>
+              <th className="w-[80px] border border-gray-300 px-6 py-3">No.</th>
+              <th className="w-[100px] border border-gray-300 px-6 py-3">Chatbot ID</th>
+              <th className="border border-gray-300 px-6 py-3">Prompt</th>
+              <th className="border border-gray-300 px-6 py-3">Creation Date</th>
+              <th className="border border-gray-300 px-6 py-3">Embed Link</th>
+              <th className="border border-gray-300 px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {chatbots.map((chatbot, index) => (
+              <tr key={chatbot.id}>
+                <td className="border border-gray-300 px-6 py-3">{index + 1}</td>
+                <td className="font-medium border border-gray-300 px-6 py-3">{chatbot.id}</td>
+                <td className="border border-gray-300 px-6 py-3">{chatbot.prompt}</td>
+                <td className="border border-gray-300 px-6 py-3">
+                  {new Date(chatbot.created_at).toLocaleString('en-US', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                  })}
+                </td>
+                <td className="border border-gray-300 px-6 py-3">
+                  <code
+                    className="text-white dark:text-gray-100 cursor-pointer"
+                    onClick={() =>
+                      copyToClipboard(
+                        `<script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="${chatbot.id}"></script>`
+                      )
+                    }
+                  >
+                    &lt;script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="{chatbot.id}"&gt;&lt;/script&gt;
+                  </code>
+                </td>
+                <td className="border border-gray-300 px-6 py-3">
+                  <button
+                    className="text-blue-500 dark:text-blue-400"
+                    onClick={() =>
+                      copyToClipboard(
+                        `<script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="${chatbot.id}"></script>`
+                      )
+                    }
+                  >
+                    Copy
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+    </div>
+    {copySuccess && (
+      <div className="absolute bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md">
+        Copied!
+      </div>
+    )}
     </section>
   );
 }
