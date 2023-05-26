@@ -216,7 +216,7 @@ export default function Chatbot({ user }: { user: User }) {
     }
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopySuccess(true);
     setTimeout(() => {
