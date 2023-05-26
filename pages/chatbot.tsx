@@ -11,7 +11,7 @@ import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postRequest } from '@/utils/helpers';
 import { updateUserName } from '@/utils/supabase-client';
-import { Input } from "@supabase/ui";
+import { Input } from '@supabase/ui';
 import {
   Table,
   TableBody,
@@ -19,8 +19,10 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+  TableRow
+} from '@/components/ui/table';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import MaterialReactTable, { type MRT_ColumnDef } from 'material-react-table';
 
@@ -52,48 +54,48 @@ const data: Person[] = [
   {
     name: {
       firstName: 'John',
-      lastName: 'Doe',
+      lastName: 'Doe'
     },
     address: '261 Erdman Ford',
     city: 'East Daphne',
-    state: 'Kentucky',
+    state: 'Kentucky'
   },
   {
     name: {
       firstName: 'Jane',
-      lastName: 'Doe',
+      lastName: 'Doe'
     },
     address: '769 Dominic Grove',
     city: 'Columbus',
-    state: 'Ohio',
+    state: 'Ohio'
   },
   {
     name: {
       firstName: 'Joe',
-      lastName: 'Doe',
+      lastName: 'Doe'
     },
     address: '566 Brakus Inlet',
     city: 'South Linda',
-    state: 'West Virginia',
+    state: 'West Virginia'
   },
   {
     name: {
       firstName: 'Kevin',
-      lastName: 'Vandy',
+      lastName: 'Vandy'
     },
     address: '722 Emie Stream',
     city: 'Lincoln',
-    state: 'Nebraska',
+    state: 'Nebraska'
   },
   {
     name: {
       firstName: 'Joshua',
-      lastName: 'Rolluffs',
+      lastName: 'Rolluffs'
     },
     address: '32188 Larkin Turnpike',
     city: 'Omaha',
-    state: 'Nebraska',
-  },
+    state: 'Nebraska'
+  }
 ];
 
 function Card({ title, description, footer, children }: Props) {
@@ -137,18 +139,23 @@ export default function Chatbot({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   // const { isLoading, subscription, userDetails } = useUser();
   const { isLoading, userDetails } = useUser();
+  const [inputValue, setInputValue] = useState('');
 
   const redirectToChatbotCreation = async () => {
     setLoading(true);
     try {
       const { url, error } = await postRequest({
         url: '/api/create-chatbot',
-        data: { "prompt": "This is test prompt" }
+        data: { prompt: inputValue }
       });
-      console.log("hits here");
+      if (error) {
+        throw new Error(error);
+      }
+      toast.success('Chatbot Added');
+      fetchChatbots();
       // window.location.assign(url);
     } catch (error) {
-      if (error) return alert((error as Error).message);
+      alert((error as Error).message);
     }
     setLoading(false);
   };
@@ -161,44 +168,52 @@ export default function Chatbot({ user }: { user: User }) {
   //     minimumFractionDigits: 0
   //   }).format((subscription?.prices?.unit_amount || 0) / 100);
 
-  const [fullName, setFullName] = useState(userDetails ? userDetails.full_name : "");
+  const [fullName, setFullName] = useState(
+    userDetails ? userDetails.full_name : ''
+  );
   const [isEditing, setIsEditing] = useState(false);
 
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'name.firstName', //access nested data with dot notation
-        header: 'First Name',
+        header: 'First Name'
       },
       {
         accessorKey: 'name.lastName',
-        header: 'Last Name',
+        header: 'Last Name'
       },
       {
         accessorKey: 'address', //normal accessorKey
-        header: 'Address',
+        header: 'Address'
       },
       {
         accessorKey: 'city',
-        header: 'City',
+        header: 'City'
       },
       {
         accessorKey: 'state',
-        header: 'State',
-      },
+        header: 'State'
+      }
     ],
-    [],
+    []
   );
 
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
 
   useEffect(() => {
-    fetch('/api/retrieve-chatbots')
-      .then((response) => response.json())
-      .then((data) => {
-        setChatbots(data.chatbots);
-      });
+    fetchChatbots();
   }, []);
+
+  const fetchChatbots = async () => {
+    try {
+      const response = await fetch('/api/retrieve-chatbots');
+      const data = await response.json();
+      setChatbots(data.chatbots);
+    } catch (error) {
+      console.error('Error fetching chatbots:', error);
+    }
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -217,41 +232,55 @@ export default function Chatbot({ user }: { user: User }) {
         </div>
       </div>
       <div className="p-4">
+        {/* Toast container */}
+        <ToastContainer />
         <Card
           title="Add Chatbot Prompt"
-        // description={
-        //   subscription
-        //     ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
-        //     : ''
-        // }
-        // footer={
-        //   <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
-        //     <p className="pb-4 sm:pb-0">
-        //       Manage your subscription on Stripe.
-        //     </p>
-        //     <Button
-        //       variant="slim"
-        //       loading={loading}
-        //       disabled={loading || !subscription}
-        //       onClick={redirectToChatbotCreation}
-        //     >
-        //       Open customer portal
-        //     </Button>
-        //   </div>
-        // }
+          // description={
+          //   subscription
+          //     ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
+          //     : ''
+          // }
+          // footer={
+          //   <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
+          //     <p className="pb-4 sm:pb-0">
+          //       Manage your subscription on Stripe.
+          //     </p>
+          //     <Button
+          //       variant="slim"
+          //       loading={loading}
+          //       disabled={loading || !subscription}
+          //       onClick={redirectToChatbotCreation}
+          //     >
+          //       Open customer portal
+          //     </Button>
+          //   </div>
+          // }
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {isLoading ? (
               <div className="h-12 mb-6">
                 <LoadingDots />
               </div>
-            ) :
+            ) : (
               // ) : subscription ? (
               //   `${subscriptionPrice}/${subscription?.prices?.interval}`
               // ) : (
-              (
-                <>
-                  <Input.TextArea />
+              <>
+                <Input.TextArea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                />
+                <br />
+                <Button
+                  variant="slim"
+                  loading={loading}
+                  disabled={loading}
+                  onClick={redirectToChatbotCreation}
+                >
+                  Create Chatbot
+                </Button>
+                {/* <Input.TextArea />
                   <br></br>
                   <Button
                     variant="slim"
@@ -260,57 +289,68 @@ export default function Chatbot({ user }: { user: User }) {
                     onClick={redirectToChatbotCreation}
                   >
                     Create Chatbot
-                  </Button>
-                </>
-              )}
+                  </Button> */}
+              </>
+            )}
           </div>
         </Card>
       </div>
       {/* <MaterialReactTable columns={columns} data={data} /> */}
 
-      <div className="font-bold text-3xl text-center mb-10">My Chatbots</div>
+      <div className="font-bold text-3xl text-center mb-8">My Chatbots</div>
       <div className="dark:bg-gray-900">
-        <table className="w-full table-auto">
-          <thead>
-            <tr>
-              <th className="w-[100px]">Chatbot ID</th>
-              <th>Prompt</th>
-              <th>Creation Date</th>
-              <th>Embed Link</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {chatbots.map((chatbot: Chatbot) => (
-              <tr key={chatbot.id}>
-                <td className="font-medium">{chatbot.id}</td>
-                <td>{chatbot.prompt}</td>
-                <td>{chatbot.created_at}</td>
-                <td>
-                  <code className="text-white dark:text-gray-100">
-                    &lt;script
-                    src="https://leadqualifier.koretex.ai/chat-bot-bubble.js"
-                    data-chatbot-id="{chatbot.id}"&gt;&lt;/script&gt;
-                  </code>
-                </td>
-                <td>
-                  <button
-                    className="text-blue-500 dark:text-blue-400"
-                    onClick={() =>
-                      copyToClipboard(
-                        `<script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="${chatbot.id}"></script>`
-                      )
-                    }
-                  >
-                    Copy
-                  </button>
-                </td>
+        <div className="px-20 py-6">
+          <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr>
+                <th className="w-[100px] border border-gray-300 px-4 py-2">
+                  Chatbot ID
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Prompt</th>
+                <th className="border border-gray-300 px-4 py-2">
+                  Creation Date
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Embed Link</th>
+                <th className="border border-gray-300 px-4 py-2">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {chatbots.map((chatbot: Chatbot) => (
+                <tr key={chatbot.id}>
+                  <td className="font-medium border border-gray-300 px-4 py-2">
+                    {chatbot.id}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {chatbot.prompt}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {chatbot.created_at}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <code className="text-white dark:text-gray-100">
+                      &lt;script
+                      src="https://leadqualifier.koretex.ai/chat-bot-bubble.js"
+                      data-chatbot-id="{chatbot.id}"&gt;&lt;/script&gt;
+                    </code>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      className="text-blue-500 dark:text-blue-400"
+                      onClick={() =>
+                        copyToClipboard(
+                          `<script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="${chatbot.id}"></script>`
+                        )
+                      }
+                    >
+                      Copy
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-
     </section>
   );
 }

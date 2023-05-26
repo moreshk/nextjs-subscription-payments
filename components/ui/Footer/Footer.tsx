@@ -94,14 +94,14 @@ export default function Footer() {
       </div>
       <div className="py-12 flex flex-col md:flex-row justify-between items-center space-y-4 bg-zinc-900">
         <div>
-          <span>&copy; 2020 ACME, Inc. All rights reserved.</span>
+          <span>&copy; 2023 Koretex AI, Inc. All rights reserved.</span>
         </div>
         <div className="flex items-center">
           <span className="text-white">Crafted by</span>
-          <a href="https://vercel.com" aria-label="Vercel.com Link">
+          <a href="https://koretex.ai" aria-label="Koretex.ai Link">
             <img
               src="/vercel.svg"
-              alt="Vercel.com Logo"
+              alt="Koretex.ai Logo"
               className="inline-block h-6 ml-4 text-white"
             />
           </a>
