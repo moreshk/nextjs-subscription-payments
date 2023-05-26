@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-zinc-600 py-12 text-white transition-colors duration-150 bg-zinc-900">
-        <div className="col-span-1 lg:col-span-2">
+        <div className="col-span-2 lg:col-span-3">
           <Link
             href="/"
             className="flex flex-initial items-center font-bold md:mr-24"
@@ -17,7 +17,7 @@ export default function Footer() {
             <span className="rounded-full border border-zinc-700 mr-2">
               <Logo />
             </span>
-            <span>ACME</span>
+            <span>KORETEX AI</span>
           </Link>
         </div>
         <div className="col-span-1 lg:col-span-2">
@@ -81,7 +81,7 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-        <div className="col-span-1 lg:col-span-6 flex items-start lg:justify-end text-white">
+        {/* <div className="col-span-1 lg:col-span-6 flex items-start lg:justify-end text-white">
           <div className="flex space-x-6 items-center h-10">
             <a
               aria-label="Github Repository"
@@ -90,13 +90,13 @@ export default function Footer() {
               <GitHub />
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
-      <div className="py-12 flex flex-col md:flex-row justify-between items-center space-y-4 bg-zinc-900">
+      <div className="py-12 flex flex-col justify-between items-center space-y-4 bg-zinc-900 text-center">
         <div>
           <span>&copy; 2023 Koretex AI, Inc. All rights reserved.</span>
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <span className="text-white">Crafted by</span>
           <a href="https://koretex.ai" aria-label="Koretex.ai Link">
             <img
@@ -105,7 +105,7 @@ export default function Footer() {
               className="inline-block h-6 ml-4 text-white"
             />
           </a>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

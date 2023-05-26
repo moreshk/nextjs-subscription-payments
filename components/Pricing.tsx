@@ -75,8 +75,7 @@ export default function Pricing({ products }: Props) {
             Pricing Plans
           </h1>
           <p className="mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
-            Start building for free, then add a site plan to go live. Account
-            plans unlock additional features.
+            Create your custom GPT-style Chatbot in minutes
           </p>
           <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
             <button
@@ -103,7 +102,7 @@ export default function Pricing({ products }: Props) {
             </button>
           </div>
         </div>
-        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
           {products.map((product) => {
             const price = product?.prices?.find(
               (price) => price.interval === billingInterval
@@ -160,8 +159,8 @@ export default function Pricing({ products }: Props) {
           <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
             Brought to you by
           </p>
-          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
-            <div className="flex items-center justify-start">
+          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-1 justify-center">
+            {/* <div className="flex items-center justify-start">
               <a href="https://nextjs.org" aria-label="Next.js Link">
                 <img
                   src="/nextjs.svg"
@@ -169,17 +168,18 @@ export default function Pricing({ products }: Props) {
                   className="h-12 text-white"
                 />
               </a>
-            </div>
-            <div className="flex items-center justify-start">
-              <a href="https://vercel.com" aria-label="Vercel.com Link">
+            </div> */}
+            <div className="flex items-center justify-center">
+              <a href="https://vercel.com" aria-label="Koretex.ai Link">
                 <img
-                  src="/vercel.svg"
-                  alt="Vercel.com Logo"
-                  className="h-6 text-white"
+                  src="/koretex-logo-180x180.png"
+                  alt="koretex.ai Logo"
+                  className="h-16 text-white"
                 />
               </a>
+              <span className="px-3 font-extrabold text-2xl">Koretex AI</span>
             </div>
-            <div className="flex items-center justify-start">
+            {/* <div className="flex items-center justify-start">
               <a href="https://stripe.com" aria-label="stripe.com Link">
                 <img
                   src="/stripe.svg"
@@ -205,7 +205,7 @@ export default function Pricing({ products }: Props) {
                   className="h-8 text-white"
                 />
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

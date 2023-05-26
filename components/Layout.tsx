@@ -25,7 +25,7 @@ export default function Layout({ children, meta: pageMeta }: Props) {
       <Head>
         <title>{meta.title}</title>
         <meta name="robots" content="follow, index" />
-        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/koretex-16x16.png" rel="shortcut icon" />
         <meta content={meta.description} name="description" />
         <meta
           property="og:url"
