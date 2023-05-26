@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
 import {
@@ -12,6 +12,17 @@ import { useUser } from '@/utils/useUser';
 import { postRequest } from '@/utils/helpers';
 import { updateUserName } from '@/utils/supabase-client';
 import { Input } from "@supabase/ui";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import MaterialReactTable, { type MRT_ColumnDef } from 'material-react-table';
 
 interface Props {
   title: string;
@@ -19,6 +30,71 @@ interface Props {
   footer?: ReactNode;
   children: ReactNode;
 }
+interface Chatbot {
+  id: string;
+  user_id: string;
+  prompt: string;
+  created_at: string;
+}
+
+type Person = {
+  name: {
+    firstName: string;
+    lastName: string;
+  };
+  address: string;
+  city: string;
+  state: string;
+};
+
+//nested data is ok, see accessorKeys in ColumnDef below
+const data: Person[] = [
+  {
+    name: {
+      firstName: 'John',
+      lastName: 'Doe',
+    },
+    address: '261 Erdman Ford',
+    city: 'East Daphne',
+    state: 'Kentucky',
+  },
+  {
+    name: {
+      firstName: 'Jane',
+      lastName: 'Doe',
+    },
+    address: '769 Dominic Grove',
+    city: 'Columbus',
+    state: 'Ohio',
+  },
+  {
+    name: {
+      firstName: 'Joe',
+      lastName: 'Doe',
+    },
+    address: '566 Brakus Inlet',
+    city: 'South Linda',
+    state: 'West Virginia',
+  },
+  {
+    name: {
+      firstName: 'Kevin',
+      lastName: 'Vandy',
+    },
+    address: '722 Emie Stream',
+    city: 'Lincoln',
+    state: 'Nebraska',
+  },
+  {
+    name: {
+      firstName: 'Joshua',
+      lastName: 'Rolluffs',
+    },
+    address: '32188 Larkin Turnpike',
+    city: 'Omaha',
+    state: 'Nebraska',
+  },
+];
 
 function Card({ title, description, footer, children }: Props) {
   return (
@@ -67,7 +143,7 @@ export default function Chatbot({ user }: { user: User }) {
     try {
       const { url, error } = await postRequest({
         url: '/api/create-chatbot',
-        data: {"prompt": "This is test prompt"}
+        data: { "prompt": "This is test prompt" }
       });
       console.log("hits here");
       // window.location.assign(url);
@@ -88,6 +164,46 @@ export default function Chatbot({ user }: { user: User }) {
   const [fullName, setFullName] = useState(userDetails ? userDetails.full_name : "");
   const [isEditing, setIsEditing] = useState(false);
 
+  const columns = useMemo<MRT_ColumnDef<Person>[]>(
+    () => [
+      {
+        accessorKey: 'name.firstName', //access nested data with dot notation
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'name.lastName',
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'address', //normal accessorKey
+        header: 'Address',
+      },
+      {
+        accessorKey: 'city',
+        header: 'City',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+    ],
+    [],
+  );
+
+  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
+
+  useEffect(() => {
+    fetch('/api/retrieve-chatbots')
+      .then((response) => response.json())
+      .then((data) => {
+        setChatbots(data.chatbots);
+      });
+  }, []);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <section className="bg-black mb-32">
       <div className="max-w-6xl mx-auto pt-8 sm:pt-24 pb-8 px-4 sm:px-6 lg:px-8">
@@ -103,26 +219,26 @@ export default function Chatbot({ user }: { user: User }) {
       <div className="p-4">
         <Card
           title="Add Chatbot Prompt"
-          // description={
-          //   subscription
-          //     ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
-          //     : ''
-          // }
-          // footer={
-          //   <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
-          //     <p className="pb-4 sm:pb-0">
-          //       Manage your subscription on Stripe.
-          //     </p>
-          //     <Button
-          //       variant="slim"
-          //       loading={loading}
-          //       disabled={loading || !subscription}
-          //       onClick={redirectToChatbotCreation}
-          //     >
-          //       Open customer portal
-          //     </Button>
-          //   </div>
-          // }
+        // description={
+        //   subscription
+        //     ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
+        //     : ''
+        // }
+        // footer={
+        //   <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
+        //     <p className="pb-4 sm:pb-0">
+        //       Manage your subscription on Stripe.
+        //     </p>
+        //     <Button
+        //       variant="slim"
+        //       loading={loading}
+        //       disabled={loading || !subscription}
+        //       onClick={redirectToChatbotCreation}
+        //     >
+        //       Open customer portal
+        //     </Button>
+        //   </div>
+        // }
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {isLoading ? (
@@ -130,70 +246,71 @@ export default function Chatbot({ user }: { user: User }) {
                 <LoadingDots />
               </div>
             ) :
-            // ) : subscription ? (
-            //   `${subscriptionPrice}/${subscription?.prices?.interval}`
-            // ) : (
+              // ) : subscription ? (
+              //   `${subscriptionPrice}/${subscription?.prices?.interval}`
+              // ) : (
               (
-              <>
-                <Input.TextArea />
-                <br></br>
-                <Button
-                  variant="slim"
-                  loading={loading}
-                  disabled={loading}
-                  onClick={redirectToChatbotCreation}
-                >
-                  Create Chatbot
-                </Button>
-              </>
-            )}
+                <>
+                  <Input.TextArea />
+                  <br></br>
+                  <Button
+                    variant="slim"
+                    loading={loading}
+                    disabled={loading}
+                    onClick={redirectToChatbotCreation}
+                  >
+                    Create Chatbot
+                  </Button>
+                </>
+              )}
           </div>
         </Card>
-
-       {/* <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
-          footer={<p>Please use 64 characters at maximum.</p>}
-        >
-          <div className="text-xl mt-8 mb-4 font-semibold">
-            {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={e => setFullName(e.target.value)}
-                  className="..."
-                />
-                <button
-                  onClick={async () => {
-                    if (user && user.id && fullName) {
-                      await updateUserName(user.id, fullName);
-                      await refreshUserDetails();
-                      setIsEditing(false);
-                    } else {
-                      console.error('User ID not found or name not entered');
-                    }
-                  }}
-                  className="..."
-                >
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                {userDetails ? (
-                  `${userDetails.full_name}`
-                ) : (
-                  <div className="h-8 mb-6">
-                    <LoadingDots />
-                  </div>
-                )}
-                <button onClick={() => setIsEditing(true)} className="...">Edit</button>
-              </>
-            )}
-          </div>
-        </Card> */}
       </div>
+      {/* <MaterialReactTable columns={columns} data={data} /> */}
+
+      <div className="font-bold text-3xl text-center mb-10">My Chatbots</div>
+      <div className="dark:bg-gray-900">
+        <table className="w-full table-auto">
+          <thead>
+            <tr>
+              <th className="w-[100px]">Chatbot ID</th>
+              <th>Prompt</th>
+              <th>Creation Date</th>
+              <th>Embed Link</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {chatbots.map((chatbot: Chatbot) => (
+              <tr key={chatbot.id}>
+                <td className="font-medium">{chatbot.id}</td>
+                <td>{chatbot.prompt}</td>
+                <td>{chatbot.created_at}</td>
+                <td>
+                  <code className="text-white dark:text-gray-100">
+                    &lt;script
+                    src="https://leadqualifier.koretex.ai/chat-bot-bubble.js"
+                    data-chatbot-id="{chatbot.id}"&gt;&lt;/script&gt;
+                  </code>
+                </td>
+                <td>
+                  <button
+                    className="text-blue-500 dark:text-blue-400"
+                    onClick={() =>
+                      copyToClipboard(
+                        `<script src="https://leadqualifier.koretex.ai/chat-bot-bubble.js" data-chatbot-id="${chatbot.id}"></script>`
+                      )
+                    }
+                  >
+                    Copy
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
     </section>
   );
 }
