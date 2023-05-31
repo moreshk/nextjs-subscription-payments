@@ -71,7 +71,7 @@ export default function Chatbot({ user }: { user: User }) {
           <div className=" bg-gray-900 max-w-3xl m-auto overflow-y-auto rounded-xl py-2 pl-6 font-medium">
             <p>{`<script`}</p>
             <p>{`src="https://leadqualifier.koretex.ai/chat-bot-bubble.js"`}</p>
-            <p>{`data-chatbot-id="${router.query?.id}"`}</p>
+            <p>{`data-chatbot-id="${router.query?.id}">`}</p>
             <p>{`</script>`}</p>
           </div>
         </div>
