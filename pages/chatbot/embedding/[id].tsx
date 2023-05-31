@@ -69,11 +69,11 @@ export default function Chatbot({ user }: { user: User }) {
             To add the chatbot as a bubble and popup on your website add this script to your html code
           </p>
           <div className=" bg-gray-900 max-w-3xl m-auto overflow-y-auto rounded-xl py-2 pl-6 font-medium">
-            <p>{`<script>`}</p>
+            {/* <p>{`<script>`}</p>
             <p>{`window.chatbaseConfig = {`}</p>
             <p>{`chatbotId: "${router.query?.id}",`}</p>
             <p>{`}`}</p>
-            <p>{`</script>`}</p>
+            <p>{`</script>`}</p> */}
             <p>{`<script`}</p>
             <p>{`src="https://leadqualifier.koretex.ai/chat-bot-bubble.js"`}</p>
             <p>{`id="${router.query?.id}"`}</p>
