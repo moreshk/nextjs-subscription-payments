@@ -15,7 +15,7 @@ import { updateUserName } from '@/utils/supabase-client';
 import { Input } from '@supabase/ui';
 import { toast } from 'react-hot-toast';
 import { useBotList } from '@/hooks/useBotList';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { getFormateTime } from '@/utils/time';
 
 interface Props {

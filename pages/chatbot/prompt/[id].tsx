@@ -15,6 +15,8 @@ import Button from '@/components/ui/Button/Button';
 import { toast } from 'react-hot-toast';
 import { supabase } from '@/utils/supabase-client';
 import { Input } from '@supabase/ui';
+import { BotDetails } from '@/components/ui/Form/botDetails';
+import { useChatBotDetails } from '@/hooks/useChatBotDetails';
 
 interface Props {
   title: string;
@@ -47,18 +49,23 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 export default function Chatbot({ user }: { user: User }) {
   const router = useRouter();
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [botName, setBotName] = useState('');
   const { prompts, error, loading, revalidate } = useChatBotPromptList(
     router.query?.id as string
   );
-  if (error) {
+  const {
+    details,
+    error: detailsError,
+    loading: detailsLoading,
+    revalidate: detailsRevalidate
+  } = useChatBotDetails(router.query?.id as string);
+  if (error || detailsError) {
     return (
       <Layout>
-        <div className="h-12 mb-6">{error}</div>
+        <div className="h-12 mb-6">Unable to load details</div>
       </Layout>
     );
   }
-  if (loading) {
+  if (loading || detailsLoading) {
     return (
       <Layout>
         <div className="h-12 mb-6">
@@ -67,75 +74,15 @@ export default function Chatbot({ user }: { user: User }) {
       </Layout>
     );
   }
-
-  return (
-    <Layout>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="text-xl mt-8 mb-4 font-semibold">
-              <div className="max-w-sm m-auto flex flex-col gap-3">
-                <div>
-                  <p>Add name Question</p>
-                  <Input
-                    disabled={submitLoading}
-                    onChange={(e) => setBotName(e.target.value)}
-                    value={botName}
-                  />
-                </div>
-                <Button
-                  variant="slim"
-                  className="w-full"
-                  loading={submitLoading}
-                  disabled={submitLoading}
-                  onClick={async () => {
-                    setSubmitLoading(true);
-                    try {
-                      const { status } = await supabase
-                        .from('chat_questions')
-                        .insert({
-                          question: botName,
-                          question_number: prompts ? prompts.length + 1 : 1,
-                          chatbot_id: router.query?.id as string
-                        });
-                      if (status === 201) {
-                        toast('Question added created successfully.');
-                        revalidate();
-                        setBotName('');
-                      } else {
-                        toast(
-                          'Unable to add question. Please try again later.'
-                        );
-                      }
-                      setSubmitLoading(false);
-                    } catch (e) {
-                      setSubmitLoading(false);
-                      toast('unable to add question. Please try again later.');
-                    }
-                  }}
-                >
-                  Add Question
-                </Button>
-              </div>
-            </div>
-
-            <div className=" max-w-2xl grid m-auto gap-2">
-              {prompts?.map((prompt) => {
-                return (
-                  <InputQuestion
-                    question={prompt.question}
-                    id={prompt.id}
-                    key={prompt.id}
-                    revalidate={revalidate}
-                  />
-                );
-              })}
-            </div>
-          </div>
+  if (prompts && details && details.length > 0) {
+    return (
+      <Layout>
+        <div className="mt-8 flow-root">
+          <BotDetails defaultValues={{ questions: prompts, ...details[0] }} />
         </div>
-      </div>
-    </Layout>
-  );
+      </Layout>
+    );
+  }
 }
 
 const Layout = ({ children }: { children: ReactNode }) => (
