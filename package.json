@@ -26,11 +26,14 @@
     "react-merge-refs": "^2.0.1",
     "stripe": "^11.13.0",
     "swr": "^2.0.4",
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.2.7",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.14.4",
     "@types/react": "^18.0.28",
+    "@types/react-beautiful-dnd": "^13.1.4",
+    "@types/uuid": "^9.0.1",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",

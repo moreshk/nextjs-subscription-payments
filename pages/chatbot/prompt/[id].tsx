@@ -1,21 +1,13 @@
-import { useState, ReactNode, useEffect } from 'react';
-import Link from 'next/link';
+import { ReactNode } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import {
   createServerSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
-
-import { useConversationListId } from '@/hooks/useConversationListId';
 import { useRouter } from 'next/router';
 import LoadingDots from '@/components/ui/LoadingDots/LoadingDots';
-import { getFormateTime } from '@/utils/time';
 import { useChatBotPromptList } from '@/hooks/useChatBotPromptList';
-import Button from '@/components/ui/Button/Button';
-import { toast } from 'react-hot-toast';
-import { supabase } from '@/utils/supabase-client';
-import { Input } from '@supabase/ui';
-import { BotDetails } from '@/components/ui/Form/botDetails';
+import BotDetails from '@/components/ui/Form/botDetails';
 import { useChatBotDetails } from '@/hooks/useChatBotDetails';
 
 interface Props {
@@ -48,15 +40,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export default function Chatbot({ user }: { user: User }) {
   const router = useRouter();
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const { prompts, error, loading, revalidate } = useChatBotPromptList(
+  const { prompts, error, loading } = useChatBotPromptList(
     router.query?.id as string
   );
   const {
     details,
     error: detailsError,
     loading: detailsLoading,
-    revalidate: detailsRevalidate
+    revalidate
   } = useChatBotDetails(router.query?.id as string);
   if (error || detailsError) {
     return (
@@ -102,82 +93,3 @@ const Layout = ({ children }: { children: ReactNode }) => (
     </div>
   </section>
 );
-
-const InputQuestion = ({
-  question,
-  id,
-  revalidate
-}: {
-  question: string;
-  id: string;
-  revalidate: () => void;
-}) => {
-  const [value, setValue] = useState(question);
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const router = useRouter();
-
-  return (
-    <div key={id} className="flex gap-2">
-      <Input
-        className="w-full"
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        disabled={submitLoading}
-      />
-      <Button
-        loading={submitLoading}
-        variant="slim"
-        onClick={async () => {
-          setSubmitLoading(true);
-          try {
-            const { status, error } = await supabase
-              .from('chat_questions')
-              .update({
-                question: value
-              })
-              .eq('id', id);
-            if (status === 204) {
-              toast('Question added created successfully.');
-            } else {
-              toast('Unable to add question. Please try again later.');
-            }
-            setSubmitLoading(false);
-          } catch (e) {
-            setValue(question);
-            setSubmitLoading(false);
-            toast('unable to add question. Please try again later.');
-          }
-        }}
-      >
-        Update
-      </Button>
-      <Button
-        loading={submitLoading}
-        variant="slim"
-        onClick={async () => {
-          setSubmitLoading(true);
-          try {
-            const { status } = await supabase
-              .from('chat_questions')
-              .delete()
-              .eq('id', id);
-            if (status === 204) {
-              toast('Question added created successfully.');
-            } else {
-              toast('Unable to add question. Please try again later.');
-            }
-            setSubmitLoading(false);
-          } catch (e) {
-            setValue(question);
-            setSubmitLoading(false);
-            toast('unable to add question. Please try again later.');
-          }
-        }}
-      >
-        Delete
-      </Button>
-    </div>
-  );
-};

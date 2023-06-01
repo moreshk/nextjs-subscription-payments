@@ -55,6 +55,9 @@ dependencies:
   tailwindcss:
     specifier: ^3.2.7
     version: 3.2.7(postcss@8.4.21)
+  uuid:
+    specifier: ^9.0.0
+    version: 9.0.0
 
 devDependencies:
   '@types/node':
@@ -63,6 +66,12 @@ devDependencies:
   '@types/react':
     specifier: ^18.0.28
     version: 18.0.28
+  '@types/react-beautiful-dnd':
+    specifier: ^13.1.4
+    version: 13.1.4
+  '@types/uuid':
+    specifier: ^9.0.1
+    version: 9.0.1
   autoprefixer:
     specifier: ^10.4.13
     version: 10.4.13(postcss@8.4.21)
@@ -374,6 +383,12 @@ packages:
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
+  /@types/react-beautiful-dnd@13.1.4:
+    resolution: {integrity: sha512-4bIBdzOr0aavN+88q3C7Pgz+xkb7tz3whORYrmSj77wfVEMfiWiooIwVWFR7KM2e+uGTe5BVrXqSfb0aHeflJA==}
+    dependencies:
+      '@types/react': 18.0.28
+    dev: true
+
   /@types/react-redux@7.1.25:
     resolution: {integrity: sha512-bAGh4e+w5D8dajd6InASVIyCo4pZLJ66oLb80F9OBLO1gKESbZcRCJpTT6uLXX+HAB57zw1WTdwJdAsewuTweg==}
     dependencies:
@@ -392,6 +407,10 @@ packages:
 
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
+
+  /@types/uuid@9.0.1:
+    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
+    dev: true
 
   /@types/websocket@1.0.5:
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
@@ -1328,6 +1347,11 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: false
+
+  /uuid@9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
     dev: false
 
   /webidl-conversions@3.0.1:
